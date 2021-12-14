@@ -25,7 +25,7 @@ class PokemonDetailViewController: UIViewController {
         guard detailPokemon?.type != nil else { return }
         guard detailPokemon?.weight != nil else { return }
         
-        fetchImages()
+        
 //        imageView.image = detailPokemon.image
         PokemonInfoLabel.text = detailPokemon.description
         configureLabel(label: attackLabel, title: "Attack", details: "\(detailPokemon.attack!)")
@@ -47,6 +47,7 @@ class PokemonDetailViewController: UIViewController {
        return iv
         
     }()
+    
     let PokemonInfoLabel:UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 15)
@@ -54,46 +55,75 @@ class PokemonDetailViewController: UIViewController {
         label.textAlignment = .center
         return label
     }()
+    
     let typeLabel:UILabel = {
        let label = UILabel()
        return label
     }()
+    
     let attackLabel:UILabel = {
        let label = UILabel()
         return label
     }()
+    
     let defenseLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .right
         return label
     }()
+    
     let heightLabel:UILabel = {
        let label = UILabel()
         return label
     }()
+    
     let weightLabel:UILabel = {
         let label = UILabel()
         label.textAlignment = .right
 
         return label
     }()
+    
     let pokedexIdLabel: UILabel = {
        let label = UILabel()
         label.textAlignment = .right
 
         return label
     }()
+    
     let sepratorView: UIView = {
        let view = UIView()
         view.backgroundColor = .opaqueSeparator
         return view
         
     }()
+    
     let seconedSepratorView: UIView = {
        let view = UIView()
         view.backgroundColor = .opaqueSeparator
         return view
         
+    }()
+    
+    let evolutionLabel: UILabel = {
+        let label = UILabel()
+        label.textAlignment = .center
+        label.font = UIFont.systemFont(ofSize: 20)
+        label.text = "Possible evolution"
+        return label
+    }()
+    
+    let evolutionFirstImage: UIImageView = {
+        let image = UIImageView()
+        image.contentMode = .scaleAspectFit
+        return image
+        
+    }()
+    
+    let evolutionSecondImage: UIImageView = {
+        let image = UIImageView()
+        image.contentMode = .scaleAspectFit
+        return image
     }()
     
     
@@ -103,10 +133,12 @@ class PokemonDetailViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         configureViewComponents()
 //        downloadPokemonImage()
         getEvolutionPokemonArray()
+        fetchImages()
+
 
     }
     override func viewWillAppear(_ animated: Bool) {
@@ -117,7 +149,7 @@ class PokemonDetailViewController: UIViewController {
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
-        
+
 
     }
     
@@ -141,16 +173,23 @@ class PokemonDetailViewController: UIViewController {
         for evolution in detailPokemon.evolutionChain ?? [] {
             idArray.append(evolution.id!)
         }
+        // Map the arrray to integers
         let intArray: [Int]? = idArray.map({ item in
             Int(item)!
         })
         if let intArray = intArray {
+            
             intArray.forEach { id in
-                evolutionPokemonsArray.append((pokemonsArray?[id-1])!)
-                print ("hello", evolutionPokemonsArray)
+                if id != nil, id < 153 {
+                    evolutionPokemonsArray.append((pokemonsArray?[id-1])!)
+                    print ("hello", evolutionPokemonsArray)
+                } else {
+                    return
+                }
+              
             }
         }
-
+         
     }
     
   
@@ -161,10 +200,10 @@ class PokemonDetailViewController: UIViewController {
         
         view.addSubview(imageView)
         imageView.backgroundColor = .clear
-        imageView.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.safeAreaLayoutGuide.leftAnchor, bottom: nil, right: view.safeAreaLayoutGuide.rightAnchor, paddingTop: 10, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: 180)
+        imageView.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.safeAreaLayoutGuide.leftAnchor, bottom: nil, right: view.safeAreaLayoutGuide.rightAnchor, paddingTop: 10, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: 125)
      
         view.addSubview(PokemonInfoLabel)
-        PokemonInfoLabel.anchor(top: imageView.bottomAnchor, left: view.safeAreaLayoutGuide.leftAnchor, bottom: nil, right: view.safeAreaLayoutGuide.rightAnchor, paddingTop: 10, paddingLeft: 16, paddingBottom: 0, paddingRight: 16, width: 0, height: 150)
+        PokemonInfoLabel.anchor(top: imageView.bottomAnchor, left: view.safeAreaLayoutGuide.leftAnchor, bottom: nil, right: view.safeAreaLayoutGuide.rightAnchor, paddingTop: 0, paddingLeft: 16, paddingBottom: 0, paddingRight: 16, width: 0, height: 150)
 
         view.addSubview(attackLabel)
         attackLabel.anchor(top: PokemonInfoLabel.bottomAnchor, left: view.safeAreaLayoutGuide.leftAnchor, bottom: nil, right: nil, paddingTop: 10, paddingLeft: 40, paddingBottom: 0, paddingRight: 0, width: 140, height: 22)
@@ -190,11 +229,34 @@ class PokemonDetailViewController: UIViewController {
         view.addSubview(seconedSepratorView)
         seconedSepratorView.anchor(top: heightLabel.bottomAnchor, left: view.safeAreaLayoutGuide.leftAnchor, bottom: nil, right: view.safeAreaLayoutGuide.rightAnchor, paddingTop: 5, paddingLeft: 30, paddingBottom: 0, paddingRight: 30, width: 0, height: 1)
         
+        view.addSubview(evolutionLabel)
+        evolutionLabel.anchor(top: typeLabel.bottomAnchor, left: view.safeAreaLayoutGuide.leftAnchor, bottom: nil, right: view.safeAreaLayoutGuide.rightAnchor, paddingTop: 20, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 150, height: 30)
+        
+        view.addSubview(evolutionFirstImage)
+        evolutionFirstImage.anchor(top: evolutionLabel.bottomAnchor, left: view.safeAreaLayoutGuide.leftAnchor, bottom: nil, right: nil, paddingTop: 25, paddingLeft: 80, paddingBottom: 0, paddingRight: 0, width: 80, height: 80)
+        
+        view.addSubview(evolutionSecondImage)
+        evolutionSecondImage.anchor(top: evolutionLabel.bottomAnchor, left: nil, bottom: nil, right: view.safeAreaLayoutGuide.rightAnchor, paddingTop: 25, paddingLeft: 0, paddingBottom: 0, paddingRight: 80, width: 80, height: 80)
+        
+        
+        
     }
     
     private func fetchImages() {
         imageView.sd_setImage(with: URL(string: (detailPokemon?.imageUrl!)!))
         imageView.sd_imageTransition = .fade
+        guard evolutionPokemonsArray != nil else { return }
+        if evolutionPokemonsArray.count > 1 {
+            evolutionFirstImage.sd_setImage(with: URL(string:evolutionPokemonsArray[0].imageUrl! ))
+            evolutionSecondImage.sd_setImage(with: URL(string: evolutionPokemonsArray[1].imageUrl!))
+
+        } else if evolutionPokemonsArray.count == 1 {
+            evolutionFirstImage.sd_setImage(with: URL(string:evolutionPokemonsArray[0].imageUrl! ))
+
+        } else {
+            evolutionLabel.text = "No evolutions avialable!"
+            return
+        }
 
     }
     
