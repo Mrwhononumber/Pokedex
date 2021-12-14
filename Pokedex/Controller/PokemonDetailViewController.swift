@@ -102,7 +102,7 @@ class PokemonDetailViewController: UIViewController {
         super.viewDidLoad()
         
         configureViewComponents()
-//        downloadPokemonImage()
+        downloadPokemonImage()
 
     }
     

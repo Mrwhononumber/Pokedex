@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-class Pokemon: Decodable {
+struct Pokemon: Decodable {
     
     let name: String?
     let imageUrl: String?
@@ -30,7 +30,7 @@ class Pokemon: Decodable {
 
 
 
-class EvolutionChain: Decodable {
+struct EvolutionChain: Decodable {
     let id: String?
     let name: String?
 }

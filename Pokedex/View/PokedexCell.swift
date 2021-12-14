@@ -11,11 +11,12 @@ class PokedexCell: UICollectionViewCell {
     
     //MARK: - Properties
    
-    var pokemnon: Pokemon? { didSet{
+    var pokemnon: Pokemon? { didSet {
         nameLabel.text = pokemnon?.name?.capitalized ?? "N/A"
+        downloadPokemonImage()
         imageView.image = pokemnon?.image
-        
-//        downloadPokemonImage()
+
+       
     }}
    
     
@@ -54,7 +55,6 @@ class PokedexCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         configureViewComponents()
-      
         
     }
 
@@ -71,6 +71,7 @@ class PokedexCell: UICollectionViewCell {
        
         addSubview(imageView)
         imageView.anchor(top: topAnchor, left: leftAnchor, bottom: nil, right: rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: self.frame.height - 32)
+     
         addSubview(nameContainerView)
         nameContainerView.anchor(top: nil, left: leftAnchor, bottom: bottomAnchor, right: rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 32)
         
@@ -79,22 +80,37 @@ class PokedexCell: UICollectionViewCell {
         layer.borderWidth = 0.15
         
     }
+   
+    
     
     func downloadPokemonImage(){
-        Service.shared.fetchImage(url: (pokemnon?.imageUrl) ?? "") { result in
+        guard pokemnon!.imageUrl != nil else {return}
+
+        Service.shared.fetchImage(url: (pokemnon?.imageUrl)!) { result in
             switch result {
             
-            case .success(let fetchedImage):
-                self.pokemnon?.image = fetchedImage
-               
+            case .success(let fetchedImages):
+                self.pokemnon?.image = fetchedImages
             case .failure(let error):
-                print ("Error happened while downloading the Image", error)
+                print ("Error fetching images", error)
             }
         }
-    }
     
     
     
-    
-    
+}
+
+
+   // Service.shared.fetchImage(url: (pokemnon?.imageUrl)!) { result in
+//            switch result {
+//
+//            case .success(let fetchedImage):
+//                self.pokemnon?.image = fetchedImage
+//
+//            case .failure(let error):
+//                print ("Error happened while downloading the Image", error)
+//            }
+//        }
+//    }
+//
 }

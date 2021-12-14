@@ -69,14 +69,10 @@ class PokedexController: UICollectionViewController {
         searchBar.delegate = self
 
 
-
-        
        showSearchIcon()
         
-        
         collectionView.register(PokedexCell.self, forCellWithReuseIdentifier: cellIdentifier)
-        //        navigationController?.navigationBar.barStyle = .black
-        //        navigationController?.navigationBar.isTranslucent = false
+     
     }
     
     

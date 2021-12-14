@@ -27,37 +27,25 @@ class Service {
                 return
             }
             guard let data = data?.parseData(removeString: "null,") else {return}
+          
             do {
                 
                 let resultArray = try JSONDecoder().decode([Pokemon].self, from: data)
-                resultArray.map { Pokemon in
-                    self.fetchImage(url: Pokemon.imageUrl!) { result in
-                        switch result{
-                        
-                        case .success(let fetchedImage):
-                            Pokemon.image = fetchedImage
-                        case .failure(let error):
-                            print("Error downloading the image inside fetching", error)
-                            return
-                        }
-                        
-                    }
-                }
                 
+
                 DispatchQueue.main.async {
                     completion(.success(resultArray))
                 }
               
-//                print(resultArray)
             } catch {
-//                debugPrint(error)
+
                 print("Error happened while decoding the data", error)
             }
-            
             
         }
         task.resume()
     }
+    
     
      func fetchImage(url: String, completion: @escaping (Result<(UIImage), Error>) -> Void ){
         guard let ImageUrl = URL(string: url) else { return }
@@ -90,3 +78,22 @@ extension Data {
         return data
     }
 }
+
+
+
+// Download and update the image value inside the pokemons array
+               
+//                 resultArray.map { pokemon in
+//                    self.fetchImage(url: pokemon.imageUrl!) { result in
+//                        switch result {
+//
+//                        case .success(let fetchedImage):
+//                            pokemon.image = fetchedImage
+//
+//                        case .failure(let error):
+//                            print("Error downloading the image inside fetching", error)
+//                            return
+//                        }
+//
+//
+//                    }
