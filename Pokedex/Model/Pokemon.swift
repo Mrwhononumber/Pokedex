@@ -21,6 +21,7 @@ struct Pokemon: Decodable {
     let id: Int?
     let evolutionChain: [EvolutionChain]?
     lazy var image = UIImage()
+  
     
     
     

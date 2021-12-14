@@ -11,6 +11,7 @@ import UIKit
 class Service {
     
    static let shared = Service()
+   
     
    private let baseUrl = "https://pokedex-bb36f.firebaseio.com/pokemon.json"
     
@@ -31,6 +32,7 @@ class Service {
             do {
                 
                 let resultArray = try JSONDecoder().decode([Pokemon].self, from: data)
+            
                 
 
                 DispatchQueue.main.async {
@@ -47,28 +49,30 @@ class Service {
     }
     
     
-     func fetchImage(url: String, completion: @escaping (Result<(UIImage), Error>) -> Void ){
-        guard let ImageUrl = URL(string: url) else { return }
-        let task = URLSession.shared.dataTask(with: ImageUrl) { data, response, error in
-            guard error == nil else {
-                print ("Error happened while downloading the Image")
-                completion(.failure(error!))
-                return
-            }
-            guard let ImageData = data else { return }
-            guard let pokemonImage = UIImage(data: ImageData) else { return }
-            
-            DispatchQueue.main.async {
-                completion(.success(pokemonImage))
-            }
-           
-        }
+    func fetchImage(url: String, completion: @escaping (Result<(UIImage), Error>) -> Void ){
+
       
-        task.resume()
+            guard let ImageUrl = URL(string: url) else { return }
+            let task = URLSession.shared.dataTask(with: ImageUrl) { data, response, error in
+                guard error == nil else {
+                    print ("Error happened while downloading the Image")
+                    completion(.failure(error!))
+                    return
+                }
+                guard let ImageData = data else { return }
+                guard let pokemonImage = UIImage(data: ImageData) else { return }
+             
+                DispatchQueue.main.async {
+                    completion(.success(pokemonImage))
+                }
+
+                
+            }
+            
+            task.resume()
+        }
     }
     
-    
-}
 
 extension Data {
     func parseData(removeString string: String) -> Data? {

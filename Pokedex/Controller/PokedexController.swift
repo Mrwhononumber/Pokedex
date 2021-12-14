@@ -16,6 +16,7 @@ class PokedexController: UICollectionViewController {
     var pokemonArray: [Pokemon]?
     let searchBar = UISearchBar()
     var filteredArray: [Pokemon]?
+    var index: Int?
   
     
     //MARK: - LifeCycle
@@ -52,6 +53,8 @@ class PokedexController: UICollectionViewController {
                 print("Error fetching pokemons from server", error)
             }
         }
+        
+    
     }
     
 
@@ -112,6 +115,8 @@ extension PokedexController {
         let selectedPokemon = filteredArray![indexPath.row]
         let detailController = PokemonDetailViewController()
         detailController.detailPokemon = selectedPokemon
+        detailController.pokemonsArray = pokemonArray!
+        print("oioioioi", pokemonArray)
         navigationController?.pushViewController(detailController, animated: true)
         
     }

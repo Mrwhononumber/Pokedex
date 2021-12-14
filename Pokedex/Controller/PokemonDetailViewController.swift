@@ -6,12 +6,14 @@
 //
 
 import UIKit
+import SDWebImage
 
 class PokemonDetailViewController: UIViewController {
     
     
     //MARK: - Properties
-  
+    var pokemonsArray: [Pokemon]?
+    var evolutionPokemonsArray:[Pokemon] = []
     var detailPokemon: Pokemon!{ didSet {
         guard detailPokemon != nil else { return }
         guard detailPokemon?.attack != nil else { return }
@@ -23,11 +25,12 @@ class PokemonDetailViewController: UIViewController {
         guard detailPokemon?.type != nil else { return }
         guard detailPokemon?.weight != nil else { return }
         
-        imageView.image = detailPokemon.image
+        fetchImages()
+//        imageView.image = detailPokemon.image
         PokemonInfoLabel.text = detailPokemon.description
         configureLabel(label: attackLabel, title: "Attack", details: "\(detailPokemon.attack!)")
         configureLabel(label: heightLabel, title: "Height", details: "\(detailPokemon.height!)")
-        configureLabel(label: typeLabel, title: "Type", details: "\(detailPokemon.type!)")
+        configureLabel(label: typeLabel, title: "Type", details: "\(detailPokemon.type!.capitalized)")
         configureLabel(label: defenseLabel, title: "Defense", details: "\(detailPokemon.defense!)")
         configureLabel(label: weightLabel, title: "Weight", details: "\(detailPokemon.weight!)")
         configureLabel(label: pokedexIdLabel, title: "Pokedex ID", details: "\(detailPokemon.id!)")
@@ -96,15 +99,28 @@ class PokemonDetailViewController: UIViewController {
     
     
     
-//MARK: - LifeCycle
+//MARK: - VC LifeCycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         configureViewComponents()
-        downloadPokemonImage()
+//        downloadPokemonImage()
+        getEvolutionPokemonArray()
 
     }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        
+//        print("Hello",evolutionPokemonsArray)
+
+    }
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(true)
+        
+
+    }
+    
     
     //MARK: - Helper Functions
     
@@ -117,6 +133,24 @@ class PokemonDetailViewController: UIViewController {
     private func setupViewContollerUI() {
         navigationItem.title = detailPokemon.name?.capitalized
         view.backgroundColor = .systemBackground
+    }
+    
+    private func getEvolutionPokemonArray(){
+        guard detailPokemon.evolutionChain != nil else {return}
+       var idArray:[String] = []
+        for evolution in detailPokemon.evolutionChain ?? [] {
+            idArray.append(evolution.id!)
+        }
+        let intArray: [Int]? = idArray.map({ item in
+            Int(item)!
+        })
+        if let intArray = intArray {
+            intArray.forEach { id in
+                evolutionPokemonsArray.append((pokemonsArray?[id-1])!)
+                print ("hello", evolutionPokemonsArray)
+            }
+        }
+
     }
     
   
@@ -158,6 +192,12 @@ class PokemonDetailViewController: UIViewController {
         
     }
     
+    private func fetchImages() {
+        imageView.sd_setImage(with: URL(string: (detailPokemon?.imageUrl!)!))
+        imageView.sd_imageTransition = .fade
+
+    }
+    
   
     private func configureLabel(label: UILabel, title: String, details: String) {
         let attributedText = NSMutableAttributedString(attributedString: NSAttributedString(string: "\(title): ", attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 16),NSAttributedString.Key.foregroundColor: UIColor.systemPink]))
@@ -165,18 +205,18 @@ class PokemonDetailViewController: UIViewController {
         label.attributedText = attributedText
     }
     
-   private func downloadPokemonImage(){
-        Service.shared.fetchImage(url: (detailPokemon?.imageUrl) ?? "") { result in
-            switch result {
-            
-            case .success(let fetchedImage):
-                self.detailPokemon?.image = fetchedImage
-                
-            case .failure(let error):
-                print ("Error happened while downloading the Image", error)
-            }
-        }
-    }
+//   private func downloadPokemonImage(){
+//        Service.shared.fetchImage(url: (detailPokemon?.imageUrl) ?? "") { result in
+//            switch result {
+//
+//            case .success(let fetchedImage):
+//                self.detailPokemon?.image = fetchedImage
+//
+//            case .failure(let error):
+//                print ("Error happened while downloading the Image", error)
+//            }
+//        }
+//    }
     
 
 

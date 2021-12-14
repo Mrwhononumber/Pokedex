@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SDWebImage
 
 class PokedexCell: UICollectionViewCell {
     
@@ -13,10 +14,11 @@ class PokedexCell: UICollectionViewCell {
    
     var pokemnon: Pokemon? { didSet {
         nameLabel.text = pokemnon?.name?.capitalized ?? "N/A"
-        downloadPokemonImage()
-        imageView.image = pokemnon?.image
-
-       
+        fetchPokemonImages()
+        
+        
+          
+        
     }}
    
     
@@ -80,37 +82,34 @@ class PokedexCell: UICollectionViewCell {
         layer.borderWidth = 0.15
         
     }
+    
+    
+    func fetchPokemonImages() {
+        imageView.sd_setImage(with: URL(string: (pokemnon?.imageUrl!)!))
+        imageView.sd_imageTransition = .fade
+    }
+    
    
     
     
-    func downloadPokemonImage(){
-        guard pokemnon!.imageUrl != nil else {return}
-
-        Service.shared.fetchImage(url: (pokemnon?.imageUrl)!) { result in
-            switch result {
-            
-            case .success(let fetchedImages):
-                self.pokemnon?.image = fetchedImages
-            case .failure(let error):
-                print ("Error fetching images", error)
-            }
-        }
-    
-    
-    
-}
-
-
-   // Service.shared.fetchImage(url: (pokemnon?.imageUrl)!) { result in
+//    func downloadPokemonImage(){
+//
+//        guard pokemnon!.imageUrl != nil else {return}
+//
+//        Service.shared.fetchImage(url: (pokemnon?.imageUrl)!) { result in
 //            switch result {
 //
-//            case .success(let fetchedImage):
-//                self.pokemnon?.image = fetchedImage
+//            case .success(let fetchedImages):
+//                self.pokemnon?.image = fetchedImages
 //
 //            case .failure(let error):
-//                print ("Error happened while downloading the Image", error)
+//                print ("Error fetching images", error)
 //            }
 //        }
-//    }
 //
+//        }
+    
 }
+
+
+
