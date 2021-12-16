@@ -12,8 +12,8 @@ class PokedexCell: UICollectionViewCell {
     
     //MARK: - Properties
    
-    var pokemnon: Pokemon? { didSet {
-        nameLabel.text = pokemnon?.name?.capitalized ?? "N/A"
+    var pokemnonViewModel: PokedexViewModel? { didSet {
+        nameLabel.text = pokemnonViewModel?.name?.capitalized ?? "N/A"
         fetchPokemonImages()
         
         
@@ -85,7 +85,7 @@ class PokedexCell: UICollectionViewCell {
     
     
     func fetchPokemonImages() {
-        imageView.sd_setImage(with: URL(string: (pokemnon?.imageUrl!)!))
+        imageView.sd_setImage(with: URL(string: (pokemnonViewModel?.imageUrl!)!))
         imageView.sd_imageTransition = .fade
     }
     

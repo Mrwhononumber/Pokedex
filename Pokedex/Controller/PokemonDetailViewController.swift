@@ -12,28 +12,26 @@ class PokemonDetailViewController: UIViewController {
     
     
     //MARK: - Properties
-    var pokemonsArray: [Pokemon]?
-    var evolutionPokemonsArray:[Pokemon] = []
-    var detailPokemon: Pokemon!{ didSet {
-        guard detailPokemon != nil else { return }
-        guard detailPokemon?.attack != nil else { return }
-        guard detailPokemon?.height != nil else { return }
-        guard detailPokemon?.image != nil else { return }
-        guard detailPokemon?.imageUrl != nil else { return }
-        guard detailPokemon?.name != nil else { return }
-        guard detailPokemon?.description != nil else { return }
-        guard detailPokemon?.type != nil else { return }
-        guard detailPokemon?.weight != nil else { return }
+    var pokemonsArray: [PokedexViewModel]?
+    var evolutionPokemonsArray:[PokedexViewModel] = []
+    var detailPokedexViewModel: PokedexViewModel!{ didSet {
+        guard detailPokedexViewModel != nil else { return }
+        guard detailPokedexViewModel?.attack != nil else { return }
+        guard detailPokedexViewModel?.height != nil else { return }
+        guard detailPokedexViewModel?.imageUrl != nil else { return }
+        guard detailPokedexViewModel?.name != nil else { return }
+        guard detailPokedexViewModel?.description != nil else { return }
+        guard detailPokedexViewModel?.type != nil else { return }
+        guard detailPokedexViewModel?.weight != nil else { return }
         
-        
-//        imageView.image = detailPokemon.image
-        PokemonInfoLabel.text = detailPokemon.description
-        configureLabel(label: attackLabel, title: "Attack", details: "\(detailPokemon.attack!)")
-        configureLabel(label: heightLabel, title: "Height", details: "\(detailPokemon.height!)")
-        configureLabel(label: typeLabel, title: "Type", details: "\(detailPokemon.type!.capitalized)")
-        configureLabel(label: defenseLabel, title: "Defense", details: "\(detailPokemon.defense!)")
-        configureLabel(label: weightLabel, title: "Weight", details: "\(detailPokemon.weight!)")
-        configureLabel(label: pokedexIdLabel, title: "Pokedex ID", details: "\(detailPokemon.id!)")
+  
+        PokemonInfoLabel.text = detailPokedexViewModel.description
+        configureLabel(label: attackLabel, title: "Attack", details: "\(detailPokedexViewModel.attack!)")
+        configureLabel(label: heightLabel, title: "Height", details: "\(detailPokedexViewModel.height!)")
+        configureLabel(label: typeLabel, title: "Type", details: "\(detailPokedexViewModel.type!.capitalized)")
+        configureLabel(label: defenseLabel, title: "Defense", details: "\(detailPokedexViewModel.defense!)")
+        configureLabel(label: weightLabel, title: "Weight", details: "\(detailPokedexViewModel.weight!)")
+        configureLabel(label: pokedexIdLabel, title: "Pokedex ID", details: "\(detailPokedexViewModel.id!)")
         
 
         
@@ -135,7 +133,6 @@ class PokemonDetailViewController: UIViewController {
         super.viewDidLoad()
 
         configureViewComponents()
-//        downloadPokemonImage()
         getEvolutionPokemonArray()
         fetchImages()
 
@@ -163,14 +160,14 @@ class PokemonDetailViewController: UIViewController {
     }
     
     private func setupViewContollerUI() {
-        navigationItem.title = detailPokemon.name?.capitalized
+        navigationItem.title = detailPokedexViewModel.name?.capitalized
         view.backgroundColor = .systemBackground
     }
     
     private func getEvolutionPokemonArray(){
-        guard detailPokemon.evolutionChain != nil else {return}
+        guard detailPokedexViewModel.evolutionChain != nil else {return}
        var idArray:[String] = []
-        for evolution in detailPokemon.evolutionChain ?? [] {
+        for evolution in detailPokedexViewModel.evolutionChain ?? [] {
             idArray.append(evolution.id!)
         }
         // Map the arrray to integers
@@ -200,7 +197,7 @@ class PokemonDetailViewController: UIViewController {
         
         view.addSubview(imageView)
         imageView.backgroundColor = .clear
-        imageView.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.safeAreaLayoutGuide.leftAnchor, bottom: nil, right: view.safeAreaLayoutGuide.rightAnchor, paddingTop: 10, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: 125)
+        imageView.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.safeAreaLayoutGuide.leftAnchor, bottom: nil, right: view.safeAreaLayoutGuide.rightAnchor, paddingTop: 10, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: view.frame.height/5)
      
         view.addSubview(PokemonInfoLabel)
         PokemonInfoLabel.anchor(top: imageView.bottomAnchor, left: view.safeAreaLayoutGuide.leftAnchor, bottom: nil, right: view.safeAreaLayoutGuide.rightAnchor, paddingTop: 0, paddingLeft: 16, paddingBottom: 0, paddingRight: 16, width: 0, height: 150)
@@ -243,7 +240,7 @@ class PokemonDetailViewController: UIViewController {
     }
     
     private func fetchImages() {
-        imageView.sd_setImage(with: URL(string: (detailPokemon?.imageUrl!)!))
+        imageView.sd_setImage(with: URL(string: (detailPokedexViewModel?.imageUrl!)!))
         imageView.sd_imageTransition = .fade
         guard evolutionPokemonsArray != nil else { return }
         if evolutionPokemonsArray.count > 1 {
@@ -267,21 +264,6 @@ class PokemonDetailViewController: UIViewController {
         label.attributedText = attributedText
     }
     
-//   private func downloadPokemonImage(){
-//        Service.shared.fetchImage(url: (detailPokemon?.imageUrl) ?? "") { result in
-//            switch result {
-//
-//            case .success(let fetchedImage):
-//                self.detailPokemon?.image = fetchedImage
-//
-//            case .failure(let error):
-//                print ("Error happened while downloading the Image", error)
-//            }
-//        }
-//    }
-    
-
-
 
 }
 

@@ -13,9 +13,9 @@ private let cellIdentifier = "cell"
 class PokedexController: UICollectionViewController {
     
   //MARK: - properties
-    var pokemonArray: [Pokemon]?
+    var pokemonArray: [PokedexViewModel]?
     let searchBar = UISearchBar()
-    var filteredArray: [Pokemon]?
+    var filteredArray: [PokedexViewModel]?
     var index: Int?
   
     
@@ -46,8 +46,11 @@ class PokedexController: UICollectionViewController {
             switch result {
             
             case .success(let fetchedPokemons):
-                self.pokemonArray = fetchedPokemons
-                self.filteredArray = fetchedPokemons
+               let pokemonViewModels = fetchedPokemons.map({ fetchedPokemon in
+                    PokedexViewModel(pokemon: fetchedPokemon)
+                })
+                self.pokemonArray = pokemonViewModels
+                self.filteredArray = pokemonViewModels
                 self.collectionView.reloadData()
             case .failure(let error):
                 print("Error fetching pokemons from server", error)
@@ -100,7 +103,7 @@ extension PokedexController {
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath) as! PokedexCell
     
-        cell.pokemnon = filteredArray?[indexPath.row]
+        cell.pokemnonViewModel = filteredArray?[indexPath.row]
         return cell
     }
     
@@ -112,9 +115,9 @@ extension PokedexController {
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
         guard filteredArray?[indexPath.row] != nil else {return}
-        let selectedPokemon = filteredArray![indexPath.row]
+        let selectedPokedexViewModel = filteredArray![indexPath.row]
         let detailController = PokemonDetailViewController()
-        detailController.detailPokemon = selectedPokemon
+        detailController.detailPokedexViewModel = selectedPokedexViewModel
         detailController.pokemonsArray = pokemonArray!
         print("oioioioi", pokemonArray)
         navigationController?.pushViewController(detailController, animated: true)
