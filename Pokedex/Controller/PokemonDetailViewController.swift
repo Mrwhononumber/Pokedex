@@ -12,8 +12,10 @@ class PokemonDetailViewController: UIViewController {
     
     
     //MARK: - Properties
-    var pokemonsArray: [PokedexViewModel]?
+//    var pokemonsArray: [PokedexViewModel]?
     var evolutionPokemonsArray:[PokedexViewModel] = []
+    var firstEvolutionDetailVM: PokedexViewModel?
+    var secondEvolutionDetailVM: PokedexViewModel?
     var detailPokedexViewModel: PokedexViewModel!{ didSet {
         guard detailPokedexViewModel != nil else { return }
         guard detailPokedexViewModel?.attack != nil else { return }
@@ -133,8 +135,9 @@ class PokemonDetailViewController: UIViewController {
         super.viewDidLoad()
 
         configureViewComponents()
-        getEvolutionPokemonArray()
-        fetchImages()
+//        getEvolutionPokemonArray()
+        updateImages()
+        print("hello Basem!", detailPokedexViewModel.evolutionIdArray )
 
 
     }
@@ -146,7 +149,7 @@ class PokemonDetailViewController: UIViewController {
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
-
+     
 
     }
     
@@ -164,30 +167,30 @@ class PokemonDetailViewController: UIViewController {
         view.backgroundColor = .systemBackground
     }
     
-    private func getEvolutionPokemonArray(){
-        guard detailPokedexViewModel.evolutionChain != nil else {return}
-       var idArray:[String] = []
-        for evolution in detailPokedexViewModel.evolutionChain ?? [] {
-            idArray.append(evolution.id!)
-        }
-        // Map the arrray to integers
-        let intArray: [Int]? = idArray.map({ item in
-            Int(item)!
-        })
-        if let intArray = intArray {
-            
-            intArray.forEach { id in
-                if id != nil, id < 153 {
-                    evolutionPokemonsArray.append((pokemonsArray?[id-1])!)
-                    print ("hello", evolutionPokemonsArray)
-                } else {
-                    return
-                }
-              
-            }
-        }
-         
-    }
+//    private func getEvolutionPokemonArray(){
+//        guard detailPokedexViewModel.evolutionChain != nil else {return}
+//       var idArray:[String] = []
+//        for evolution in detailPokedexViewModel.evolutionChain ?? [] {
+//            idArray.append(evolution.id!)
+//        }
+//        // Map the arrray to integers
+//        let intArray: [Int]? = idArray.map({ item in
+//            Int(item)!
+//        })
+//        if let intArray = intArray {
+//
+//            intArray.forEach { id in
+//                if id != nil, id < 153 {
+//                    evolutionPokemonsArray.append((pokemonsArray?[id-1])!)
+////                    print ("hello", evolutionPokemonsArray)
+//                } else {
+//                    return
+//                }
+//
+//            }
+//        }
+//
+//    }
     
   
     
@@ -239,23 +242,32 @@ class PokemonDetailViewController: UIViewController {
         
     }
     
-    private func fetchImages() {
+    private func updateImages() {
         imageView.sd_setImage(with: URL(string: (detailPokedexViewModel?.imageUrl!)!))
         imageView.sd_imageTransition = .fade
-        guard evolutionPokemonsArray != nil else { return }
-        if evolutionPokemonsArray.count > 1 {
-            evolutionFirstImage.sd_setImage(with: URL(string:evolutionPokemonsArray[0].imageUrl! ))
-            evolutionSecondImage.sd_setImage(with: URL(string: evolutionPokemonsArray[1].imageUrl!))
-
-        } else if evolutionPokemonsArray.count == 1 {
-            evolutionFirstImage.sd_setImage(with: URL(string:evolutionPokemonsArray[0].imageUrl! ))
-
-        } else {
-            evolutionLabel.text = "No evolutions avialable!"
-            return
-        }
-
+        
+        guard ((firstEvolutionDetailVM?.imageUrl) != nil) else {return}
+        evolutionFirstImage.sd_setImage(with: URL(string: (firstEvolutionDetailVM?.imageUrl)!))
+    
+        guard ((secondEvolutionDetailVM?.imageUrl) != nil) else {return}
+       
+        evolutionSecondImage.sd_setImage(with: URL(string: (secondEvolutionDetailVM?.imageUrl)!))
+        
     }
+//        guard evolutionPokemonsArray != nil else { return }
+//        if evolutionPokemonsArray.count > 1 {
+//            evolutionFirstImage.sd_setImage(with: URL(string:evolutionPokemonsArray[0].imageUrl! ))
+//            evolutionSecondImage.sd_setImage(with: URL(string: evolutionPokemonsArray[1].imageUrl!))
+//
+//        } else if evolutionPokemonsArray.count == 1 {
+//            evolutionFirstImage.sd_setImage(with: URL(string:evolutionPokemonsArray[0].imageUrl! ))
+//
+//        } else {
+//            evolutionLabel.text = "No evolutions avialable!"
+//            return
+//        }
+
+  
     
   
     private func configureLabel(label: UILabel, title: String, details: String) {

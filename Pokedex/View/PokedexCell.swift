@@ -87,6 +87,8 @@ class PokedexCell: UICollectionViewCell {
     func fetchPokemonImages() {
         imageView.sd_setImage(with: URL(string: (pokemnonViewModel?.imageUrl!)!))
         imageView.sd_imageTransition = .fade
+//        imageView.sd_imageIndicator = SDWebImageProgressIndicator.
+//        imageView.sd_imageIndicator = SDWebImageActivityIndicator.white
     }
     
    
