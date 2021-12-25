@@ -26,6 +26,9 @@ class PokedexController: UICollectionViewController {
         configureUIComponents()
         fetchPokemons()
     }
+    override func viewWillAppear(_ animated: Bool) {
+        showSearchIcon()
+    }
     
     //MARK: - Selectors
     

@@ -9,11 +9,11 @@ import Foundation
 
 struct Constants {
     
-    struct pokemonServer{
+    struct pokemonServer {
        static let pokemonURL = "https://pokedex-bb36f.firebaseio.com/pokemon.json"
     }
     
-    struct UIConfigration{
+    struct UIConfigration {
         static let collectionViewCellIdentifier = "cell"
         
     }
