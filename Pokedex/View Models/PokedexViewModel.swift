@@ -14,28 +14,25 @@ class PokedexViewModelList {
     var firstEvolutionVM: PokedexViewModel?
     var seconedEvolutionVM: PokedexViewModel?
     
-    func getEvolutionVM (selectedPoke: PokedexViewModel, completion: @escaping ()->()) {
-        if selectedPoke.evolutionIdArray != nil {
-            if selectedPoke.evolutionIdArray!.count > 1 {
-                firstEvolutionVM =  pokedexViewModelFilteredArray![(selectedPoke.evolutionIdArray?[0])!]
-                seconedEvolutionVM = pokedexViewModelFilteredArray?[(selectedPoke.evolutionIdArray?[1])!]
-                
-                completion()
-            }
-        } else {
-            firstEvolutionVM = pokedexViewModelFilteredArray?[(selectedPoke.evolutionIdArray?[0])!]
+    // fetch evolution pokemons viewModels so it can get passed to the detail ViewController
+    func getEvolutionPokemons (with selectedPoke: PokedexViewModel, completion: @escaping ()->())
+    {
+        
+        if selectedPoke.evolutionIdArray!.count > 1 {
+            firstEvolutionVM =  pokedexViewModelArray![(selectedPoke.evolutionIdArray?[0])!]
+            seconedEvolutionVM = pokedexViewModelArray?[(selectedPoke.evolutionIdArray?[1])!]
+            
+            completion()
+        }
+        else if selectedPoke.evolutionIdArray!.count == 1 {
+            firstEvolutionVM = pokedexViewModelArray?[(selectedPoke.evolutionIdArray?[0])!]
+            seconedEvolutionVM = nil
             completion()
         }
         
     }
-
-    init() {
-        self.pokedexViewModelArray = [PokedexViewModel]()
-        self.pokedexViewModelFilteredArray = [PokedexViewModel]()
-        
-    }
-  
     
+    // search the collectionView using the searchBar input
     func searchPokemons(with searchTerm:String, completion: @escaping ()->()) {
         pokedexViewModelFilteredArray = []
         if searchTerm == "" {
@@ -53,15 +50,12 @@ class PokedexViewModelList {
         }
     }
     
+    // reset the collectionView to it's default state when "cancel" or "X" (inside search bar) button get tapped
     func resetSearchToDefault(completion: @escaping ()->()){
         pokedexViewModelFilteredArray = pokedexViewModelArray
         completion()
     }
-    
-    
-    
 
-    
 
 }
 
@@ -82,17 +76,17 @@ struct PokedexViewModel {
         var array = [Int]()
         if evolutionChain != nil {
             for evolution in evolutionChain! {
-                if Int (evolution.id!)! < 152 {
+                if Int (evolution.id!)! < 153 {
                     array.append(Int(evolution.id!)! - 1 )
                 }
-              
+                
             }
         }
-     
+        
         return array
     }
+    var evolutionLabel: String?
     
-    //    let image: UIImage?
     init(pokemon: Pokemon) {
         self.name = pokemon.name
         self.imageUrl = pokemon.imageUrl
@@ -104,12 +98,14 @@ struct PokedexViewModel {
         self.type = pokemon.type
         self.id = pokemon.id
         self.evolutionChain = pokemon.evolutionChain
-      
-       
-
-            
+        if evolutionChain != nil {
+            evolutionLabel = "Possible Evolutions"
+        } else {
+            evolutionLabel = " No Evolutions Available!"
+        }
+        
     }
-    }
+}
     
 
 

@@ -8,15 +8,13 @@
 import Foundation
 import UIKit
 
-class Service {
+class NetworkManager {
     
-    static let shared = Service()
-    
-    private let baseUrl = "https://pokedex-bb36f.firebaseio.com/pokemon.json"
+    static let shared = NetworkManager()
     
     func fetchPokemon(completion: @escaping (Result<[Pokemon], Error>) -> Void) {
         
-        guard let pokemonUrl = URL(string:baseUrl) else { return }
+        guard let pokemonUrl = URL(string:Constants.pokemonServer.pokemonURL) else { return }
         
         let task = URLSession.shared.dataTask(with: pokemonUrl) { data, response, error in
             

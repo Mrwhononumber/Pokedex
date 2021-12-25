@@ -12,8 +12,6 @@ class PokemonDetailViewController: UIViewController {
     
     
     //MARK: - Properties
-//    var pokemonsArray: [PokedexViewModel]?
-    var evolutionPokemonsArray:[PokedexViewModel] = []
     var firstEvolutionDetailVM: PokedexViewModel?
     var secondEvolutionDetailVM: PokedexViewModel?
     var detailPokedexViewModel: PokedexViewModel!{ didSet {
@@ -28,6 +26,7 @@ class PokemonDetailViewController: UIViewController {
         
   
         PokemonInfoLabel.text = detailPokedexViewModel.description
+        evolutionLabel.text = detailPokedexViewModel.evolutionLabel
         configureLabel(label: attackLabel, title: "Attack", details: "\(detailPokedexViewModel.attack!)")
         configureLabel(label: heightLabel, title: "Height", details: "\(detailPokedexViewModel.height!)")
         configureLabel(label: typeLabel, title: "Type", details: "\(detailPokedexViewModel.type!.capitalized)")
@@ -109,7 +108,7 @@ class PokemonDetailViewController: UIViewController {
         let label = UILabel()
         label.textAlignment = .center
         label.font = UIFont.systemFont(ofSize: 20)
-        label.text = "Possible evolution"
+//        label.text = "Possible evolution"
         return label
     }()
     
@@ -135,23 +134,10 @@ class PokemonDetailViewController: UIViewController {
         super.viewDidLoad()
 
         configureViewComponents()
-//        getEvolutionPokemonArray()
         updateImages()
-        print("hello Basem!", detailPokedexViewModel.evolutionIdArray )
-
-
+       
     }
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(true)
-        
-//        print("Hello",evolutionPokemonsArray)
-
-    }
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(true)
-     
-
-    }
+ 
     
     
     //MARK: - Helper Functions
@@ -167,30 +153,7 @@ class PokemonDetailViewController: UIViewController {
         view.backgroundColor = .systemBackground
     }
     
-//    private func getEvolutionPokemonArray(){
-//        guard detailPokedexViewModel.evolutionChain != nil else {return}
-//       var idArray:[String] = []
-//        for evolution in detailPokedexViewModel.evolutionChain ?? [] {
-//            idArray.append(evolution.id!)
-//        }
-//        // Map the arrray to integers
-//        let intArray: [Int]? = idArray.map({ item in
-//            Int(item)!
-//        })
-//        if let intArray = intArray {
-//
-//            intArray.forEach { id in
-//                if id != nil, id < 153 {
-//                    evolutionPokemonsArray.append((pokemonsArray?[id-1])!)
-////                    print ("hello", evolutionPokemonsArray)
-//                } else {
-//                    return
-//                }
-//
-//            }
-//        }
-//
-//    }
+
     
   
     
@@ -200,7 +163,7 @@ class PokemonDetailViewController: UIViewController {
         
         view.addSubview(imageView)
         imageView.backgroundColor = .clear
-        imageView.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.safeAreaLayoutGuide.leftAnchor, bottom: nil, right: view.safeAreaLayoutGuide.rightAnchor, paddingTop: 10, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: view.frame.height/5)
+        imageView.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.safeAreaLayoutGuide.leftAnchor, bottom: nil, right: view.safeAreaLayoutGuide.rightAnchor, paddingTop: 10, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: view.frame.height/6)
      
         view.addSubview(PokemonInfoLabel)
         PokemonInfoLabel.anchor(top: imageView.bottomAnchor, left: view.safeAreaLayoutGuide.leftAnchor, bottom: nil, right: view.safeAreaLayoutGuide.rightAnchor, paddingTop: 0, paddingLeft: 16, paddingBottom: 0, paddingRight: 16, width: 0, height: 150)
@@ -248,27 +211,15 @@ class PokemonDetailViewController: UIViewController {
         
         guard ((firstEvolutionDetailVM?.imageUrl) != nil) else {return}
         evolutionFirstImage.sd_setImage(with: URL(string: (firstEvolutionDetailVM?.imageUrl)!))
+      
     
         guard ((secondEvolutionDetailVM?.imageUrl) != nil) else {return}
        
         evolutionSecondImage.sd_setImage(with: URL(string: (secondEvolutionDetailVM?.imageUrl)!))
         
     }
-//        guard evolutionPokemonsArray != nil else { return }
-//        if evolutionPokemonsArray.count > 1 {
-//            evolutionFirstImage.sd_setImage(with: URL(string:evolutionPokemonsArray[0].imageUrl! ))
-//            evolutionSecondImage.sd_setImage(with: URL(string: evolutionPokemonsArray[1].imageUrl!))
-//
-//        } else if evolutionPokemonsArray.count == 1 {
-//            evolutionFirstImage.sd_setImage(with: URL(string:evolutionPokemonsArray[0].imageUrl! ))
-//
-//        } else {
-//            evolutionLabel.text = "No evolutions avialable!"
-//            return
-//        }
 
-  
-    
+
   
     private func configureLabel(label: UILabel, title: String, details: String) {
         let attributedText = NSMutableAttributedString(attributedString: NSAttributedString(string: "\(title): ", attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 16),NSAttributedString.Key.foregroundColor: UIColor.systemPink]))

@@ -8,24 +8,22 @@
 import UIKit
 
 
-private let cellIdentifier = "cell"
 
 class PokedexController: UICollectionViewController {
     
     //MARK: - properties
     var pokedexViewModelList = PokedexViewModelList()
-    var pokemonArray: [PokedexViewModel]?
     let searchBar = UISearchBar()
     var filteredArray: [PokedexViewModel]?
     var index: Int?
     
     
-    //MARK: - LifeCycle
+    //MARK: - VC LifeCycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        configureViewComponents()
+        configureUIComponents()
         fetchPokemons()
     }
     
@@ -43,19 +41,18 @@ class PokedexController: UICollectionViewController {
     //MARK: - API Call
     
     func fetchPokemons(){
-        Service.shared.fetchPokemon { [weak self] result in
+        NetworkManager.shared.fetchPokemon { [weak self] result in
             switch result {
             case .success(let fetchedPokemons):
                 let pokemonViewModels = fetchedPokemons.map({ fetchedPokemon in
                     PokedexViewModel(pokemon: fetchedPokemon)
                 })
                 guard let self = self else {return}
-                self.pokemonArray = pokemonViewModels
-                self.filteredArray = pokemonViewModels
                 self.pokedexViewModelList.pokedexViewModelArray = pokemonViewModels
                 self.pokedexViewModelList.pokedexViewModelFilteredArray = pokemonViewModels
                 self.collectionView.reloadData()
             case .failure(let error):
+                self?.showAlertMessage(withTitle: "Network Error", message: "Failed to connect to server")
                 print("Error fetching pokemons from server", error)
             }
         }
@@ -65,7 +62,7 @@ class PokedexController: UICollectionViewController {
     
     //MARK: - Helper Functions
     
-    func configureViewComponents(){
+    func configureUIComponents(){
         
         collectionView.backgroundColor = .systemBackground
         
@@ -79,7 +76,7 @@ class PokedexController: UICollectionViewController {
         
         showSearchIcon()
         
-        collectionView.register(PokedexCell.self, forCellWithReuseIdentifier: cellIdentifier)
+        collectionView.register(PokedexCell.self, forCellWithReuseIdentifier: Constants.UIConfigration.collectionViewCellIdentifier)
         
     }
     
@@ -103,7 +100,7 @@ extension PokedexController {
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath) as! PokedexCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.UIConfigration.collectionViewCellIdentifier, for: indexPath) as! PokedexCell
         
         cell.pokemnonViewModel = pokedexViewModelList.pokedexViewModelFilteredArray?[indexPath.row]
       
@@ -124,32 +121,20 @@ extension PokedexController {
         detailController.detailPokedexViewModel = selectedPokedexViewModel
         
         // pass the corresponding evolution pokemons to the detail viewController
-        pokedexViewModelList.getEvolutionVM(selectedPoke: selectedPokedexViewModel) {
+        pokedexViewModelList.getEvolutionPokemons(with: selectedPokedexViewModel) {
             detailController.firstEvolutionDetailVM = self.pokedexViewModelList.firstEvolutionVM
             detailController.secondEvolutionDetailVM = self.pokedexViewModelList.seconedEvolutionVM
+            
         }
 
-//        if selectedPokedexViewModel.evolutionIdArray != nil {
-//            if selectedPokedexViewModel.evolutionIdArray!.count > 1 {
-//                let firstEvolutionVM = pokedexViewModelList.pokedexViewModelFilteredArray?[(selectedPokedexViewModel.evolutionIdArray?[0])!]
-//                let seconedEvolutionVM = pokedexViewModelList.pokedexViewModelFilteredArray?[(selectedPokedexViewModel.evolutionIdArray?[1])!]
-//                detailController.firstEvolutionDetailVM = firstEvolutionVM
-//                detailController.secondEvolutionDetailVM = seconedEvolutionVM
-//            } else {
-//                let firstEvolutionVM = pokedexViewModelList.pokedexViewModelFilteredArray?[(selectedPokedexViewModel.evolutionIdArray?[0])!]
-//                detailController.firstEvolutionDetailVM = firstEvolutionVM
-//            }
-//        }
-  
-       
-
-    
+         // Navigate to the detail ViewController
         navigationController?.pushViewController(detailController, animated: true)
        
     }
    
 }
 
+//MARK: - CollectionView DelegateFlowLayout
 
 extension PokedexController: UICollectionViewDelegateFlowLayout {
     
@@ -176,11 +161,11 @@ extension PokedexController: UICollectionViewDelegateFlowLayout {
 extension PokedexController: UISearchBarDelegate {
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        
+        searchBar.text = ""
         showSearchIcon()
         
     }
-    
+    // When "cancel" or "X" (inside search bar) button get tapped
     func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
         pokedexViewModelList.resetSearchToDefault {
             self.collectionView.reloadData()
@@ -194,18 +179,7 @@ extension PokedexController: UISearchBarDelegate {
             self.collectionView.reloadData()
 
         }
-//        filteredArray = []
-//        if searchText == "" {
-//            filteredArray = pokemonArray
-//        }
-//        guard pokemonArray != nil else {return}
-//        for pokemon in pokemonArray! {
-//            if pokemon.name!.lowercased().contains(searchText.lowercased()) {
-//                filteredArray?.append(pokemon)
-//            }
-//        }
-//
-//        collectionView.reloadData()
+
     }
     
     
