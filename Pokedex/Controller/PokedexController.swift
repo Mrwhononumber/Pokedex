@@ -89,6 +89,7 @@ class PokedexController: UICollectionViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector (hideSearchIconAndShowSearchBar))
         navigationItem.rightBarButtonItem?.tintColor = .systemPink
         searchBar.showsCancelButton = false
+        searchBar.text = ""
     }
     
     
