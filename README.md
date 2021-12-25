@@ -13,7 +13,7 @@ Sample iOS application in Swift demonstrating the usage of MVVM pattern
 
 * Search for a specific Pokemon
 
-* View pokemon details as well as possible evolutions if exists
+* View pokemon details as well as possible evolutions if any available
 
 # Implementation features
 
