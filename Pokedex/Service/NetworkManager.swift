@@ -12,18 +12,34 @@ class NetworkManager {
     
     static let shared = NetworkManager()
     
-    func fetchPokemon(completion: @escaping (Result<[Pokemon], Error>) -> Void) {
+    func fetchPokemon(completion: @escaping (Result<[Pokemon], PokeError>) -> Void) {
         
-        guard let pokemonUrl = URL(string:Constants.pokemonServer.pokemonURL) else { return }
+        guard let pokemonUrl = URL(string:Constants.pokemonServer.pokemonURL) else {
+            DispatchQueue.main.async {
+                completion(.failure(.invalidURL))
+
+            }
+            return }
         
         let task = URLSession.shared.dataTask(with: pokemonUrl) { data, response, error in
             
             // Handle error
             if let error = error {
                 print("Failed to fetch data with error", error.localizedDescription)
-                completion(.failure(error))
+                DispatchQueue.main.async {
+                    completion(.failure(.unableToComplete))
+
+                }
                 return
             }
+            
+            guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
+                DispatchQueue.main.async {
+                    completion(.failure(.invalidResponse))
+                }
+                return
+            }
+            
             guard let data = data?.parseData(removeString: "null,") else {return}
             
             do {
@@ -36,7 +52,9 @@ class NetworkManager {
                 }
                 
             } catch {
-                
+                DispatchQueue.main.async {
+                    completion(.failure(.invalidData))
+                }
                 print("Error happened while decoding the data", error)
             }
             
@@ -45,17 +63,36 @@ class NetworkManager {
     }
     
     
-    func fetchImage(url: String, completion: @escaping (Result<(UIImage), Error>) -> Void ){
+    
+    func fetchImage(url: String, completion: @escaping (Result<(UIImage), PokeError>) -> Void ){
         
-        guard let ImageUrl = URL(string: url) else { return }
+        guard let ImageUrl = URL(string: url) else {
+            DispatchQueue.main.async {
+                completion(.failure(.invalidURL))
+            }
+            
+            return }
         let task = URLSession.shared.dataTask(with: ImageUrl) { data, response, error in
             guard error == nil else {
                 print ("Error happened while downloading the Image")
-                completion(.failure(error!))
+                DispatchQueue.main.async {
+                    completion(.failure(.unableToComplete))
+                }
+               
                 return
             }
-            guard let ImageData = data else { return }
-            guard let pokemonImage = UIImage(data: ImageData) else { return }
+            guard let ImageData = data else {
+                DispatchQueue.main.async {
+                    completion(.failure(.invalidData))
+                }
+                
+                return }
+            guard let pokemonImage = UIImage(data: ImageData) else {
+                DispatchQueue.main.async {
+                    completion(.failure(.invalidData))
+                }
+               
+                return }
             
             DispatchQueue.main.async {
                 completion(.success(pokemonImage))

@@ -45,17 +45,18 @@ class PokedexController: UICollectionViewController {
     
     func fetchPokemons(){
         NetworkManager.shared.fetchPokemon { [weak self] result in
+            guard let self = self else {return}
             switch result {
             case .success(let fetchedPokemons):
                 let pokemonViewModels = fetchedPokemons.map({ fetchedPokemon in
                     PokedexViewModel(pokemon: fetchedPokemon)
                 })
-                guard let self = self else {return}
                 self.pokedexViewModelList.pokedexViewModelArray = pokemonViewModels
                 self.pokedexViewModelList.pokedexViewModelFilteredArray = pokemonViewModels
                 self.collectionView.reloadData()
+                
             case .failure(let error):
-                self?.showAlertMessage(withTitle: "Network Error", message: "Failed to connect to server")
+                self.showAlertMessage(withTitle: "Network Error", message: error.rawValue)
                 print("Error fetching pokemons from server", error)
             }
         }
@@ -101,6 +102,7 @@ extension PokedexController {
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return pokedexViewModelList.pokedexViewModelFilteredArray?.count ?? 0
+      
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
