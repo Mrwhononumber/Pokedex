@@ -22,7 +22,6 @@ class PokedexController: UICollectionViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         configureUIComponents()
         fetchPokemons()
     }
@@ -32,7 +31,7 @@ class PokedexController: UICollectionViewController {
     
     //MARK: - Selectors
     
-    @objc func hideSearchIconAndShowSearchBar(){
+    @objc private func hideSearchIconAndShowSearchBar(){
         navigationItem.titleView = searchBar
         searchBar.showsCancelButton = true
         searchBar.placeholder = "Search Pokemons"
@@ -43,7 +42,7 @@ class PokedexController: UICollectionViewController {
     
     //MARK: - API Call
     
-    func fetchPokemons(){
+   private func fetchPokemons(){
         NetworkManager.shared.fetchPokemon { [weak self] result in
             guard let self = self else {return}
             switch result {
@@ -57,7 +56,7 @@ class PokedexController: UICollectionViewController {
                 
             case .failure(let error):
                 self.showAlertMessage(withTitle: "Network Error", message: error.rawValue)
-                print("Error fetching pokemons from server", error)
+                
             }
         }
         
@@ -66,7 +65,7 @@ class PokedexController: UICollectionViewController {
     
     //MARK: - Helper Functions
     
-    func configureUIComponents(){
+   private func configureUIComponents(){
         
         collectionView.backgroundColor = .systemBackground
         
@@ -85,7 +84,7 @@ class PokedexController: UICollectionViewController {
     }
     
     
-    func showSearchIcon(){
+   private func showSearchIcon(){
         navigationItem.titleView = nil
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector (hideSearchIconAndShowSearchBar))
         navigationItem.rightBarButtonItem?.tintColor = .systemPink
@@ -169,7 +168,6 @@ extension PokedexController: UISearchBarDelegate {
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         searchBar.text = ""
         showSearchIcon()
-        
     }
     // When "cancel" or "X" (inside search bar) button get tapped
     func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {

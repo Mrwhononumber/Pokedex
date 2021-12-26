@@ -23,9 +23,8 @@ class NetworkManager {
         
         let task = URLSession.shared.dataTask(with: pokemonUrl) { data, response, error in
             
-            // Handle error
-            if let error = error {
-                print("Failed to fetch data with error", error.localizedDescription)
+            if error != nil {
+            
                 DispatchQueue.main.async {
                     completion(.failure(.unableToComplete))
 
@@ -55,7 +54,6 @@ class NetworkManager {
                 DispatchQueue.main.async {
                     completion(.failure(.invalidData))
                 }
-                print("Error happened while decoding the data", error)
             }
             
         }
@@ -74,7 +72,6 @@ class NetworkManager {
             return }
         let task = URLSession.shared.dataTask(with: ImageUrl) { data, response, error in
             guard error == nil else {
-                print ("Error happened while downloading the Image")
                 DispatchQueue.main.async {
                     completion(.failure(.unableToComplete))
                 }

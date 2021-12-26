@@ -51,7 +51,7 @@ class PokedexViewModelList {
     }
     
     
-    // reset the collectionView to it's default state when "cancel" or "X" (inside search bar) button get tapped
+    // Reset the collectionView to it's default state when "cancel" or "X" (inside search bar) button get tapped
     func resetSearchToDefault(completion: @escaping ()->()){
         pokedexViewModelFilteredArray = pokedexViewModelArray
         completion()

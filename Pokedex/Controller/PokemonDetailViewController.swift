@@ -42,7 +42,6 @@ class PokemonDetailViewController: UIViewController {
      let iv = UIImageView()
         iv.backgroundColor = .systemGroupedBackground
         iv.contentMode = .scaleAspectFit
-        
        return iv
         
     }()
@@ -79,14 +78,12 @@ class PokemonDetailViewController: UIViewController {
     let weightLabel:UILabel = {
         let label = UILabel()
         label.textAlignment = .right
-
         return label
     }()
     
     let pokedexIdLabel: UILabel = {
        let label = UILabel()
         label.textAlignment = .right
-
         return label
     }()
     
@@ -108,7 +105,6 @@ class PokemonDetailViewController: UIViewController {
         let label = UILabel()
         label.textAlignment = .center
         label.font = UIFont.systemFont(ofSize: 20)
-//        label.text = "Possible evolution"
         return label
     }()
     
@@ -132,10 +128,8 @@ class PokemonDetailViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
         configureViewComponents()
         updateImages()
-       
     }
  
     
@@ -145,7 +139,6 @@ class PokemonDetailViewController: UIViewController {
    private func configureViewComponents() {
           setupViewContollerUI()
           setupViewsAutoLayout()
-
     }
     
     private func setupViewContollerUI() {
