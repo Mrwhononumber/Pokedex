@@ -14,28 +14,16 @@ class PokemonDetailViewController: UIViewController {
     //MARK: - Properties
     var firstEvolutionDetailVM: PokedexViewModel?
     var secondEvolutionDetailVM: PokedexViewModel?
-    var detailPokedexViewModel: PokedexViewModel!{ didSet {
-        guard detailPokedexViewModel != nil else { return }
-        guard detailPokedexViewModel?.attack != nil else { return }
-        guard detailPokedexViewModel?.height != nil else { return }
-        guard detailPokedexViewModel?.imageUrl != nil else { return }
-        guard detailPokedexViewModel?.name != nil else { return }
-        guard detailPokedexViewModel?.description != nil else { return }
-        guard detailPokedexViewModel?.type != nil else { return }
-        guard detailPokedexViewModel?.weight != nil else { return }
-        
-  
-        PokemonInfoLabel.text = detailPokedexViewModel.description
+    var detailPokedexViewModel: PokedexViewModel!{
+        didSet {
+        PokemonInfoLabel.text = detailPokedexViewModel.description ?? "N/A"
         evolutionLabel.text = detailPokedexViewModel.evolutionLabel
-        configureLabel(label: attackLabel, title: "Attack", details: "\(detailPokedexViewModel.attack!)")
-        configureLabel(label: heightLabel, title: "Height", details: "\(detailPokedexViewModel.height!)")
-        configureLabel(label: typeLabel, title: "Type", details: "\(detailPokedexViewModel.type!.capitalized)")
-        configureLabel(label: defenseLabel, title: "Defense", details: "\(detailPokedexViewModel.defense!)")
-        configureLabel(label: weightLabel, title: "Weight", details: "\(detailPokedexViewModel.weight!)")
-        configureLabel(label: pokedexIdLabel, title: "Pokedex ID", details: "\(detailPokedexViewModel.id!)")
-        
-
-        
+        configureLabel(label: attackLabel, title: "Attack", details: "\(detailPokedexViewModel.attack ?? 0)")
+        configureLabel(label: heightLabel, title: "Height", details: "\(detailPokedexViewModel.height ?? 0)")
+        configureLabel(label: typeLabel, title: "Type", details: "\(detailPokedexViewModel.type ?? "N/A".capitalized)")
+        configureLabel(label: defenseLabel, title: "Defense", details: "\(detailPokedexViewModel.defense ?? 0)")
+        configureLabel(label: weightLabel, title: "Weight", details: "\(detailPokedexViewModel.weight ?? 0)")
+        configureLabel(label: pokedexIdLabel, title: "Pokedex ID", details: "\(detailPokedexViewModel.id  ?? 0)")
     }}
     
     let imageView: UIImageView = {
@@ -121,9 +109,6 @@ class PokemonDetailViewController: UIViewController {
         return image
     }()
     
-    
-    
-    
 //MARK: - VC LifeCycle
     
     override func viewDidLoad() {
@@ -131,8 +116,6 @@ class PokemonDetailViewController: UIViewController {
         configureViewComponents()
         updateImages()
     }
- 
-    
     
     //MARK: - Helper Functions
     
@@ -145,10 +128,6 @@ class PokemonDetailViewController: UIViewController {
         navigationItem.title = detailPokedexViewModel.name?.capitalized
         view.backgroundColor = .systemBackground
     }
-    
-
-    
-  
     
     private func setupViewsAutoLayout() {
         
@@ -193,9 +172,6 @@ class PokemonDetailViewController: UIViewController {
         
         view.addSubview(evolutionSecondImage)
         evolutionSecondImage.anchor(top: evolutionLabel.bottomAnchor, left: nil, bottom: nil, right: view.safeAreaLayoutGuide.rightAnchor, paddingTop: 25, paddingLeft: 0, paddingBottom: 0, paddingRight: 80, width: 80, height: 80)
-        
-        
-        
     }
     
     private func updateImages() {
@@ -209,17 +185,12 @@ class PokemonDetailViewController: UIViewController {
         guard ((secondEvolutionDetailVM?.imageUrl) != nil) else {return}
        
         evolutionSecondImage.sd_setImage(with: URL(string: (secondEvolutionDetailVM?.imageUrl)!))
-        
     }
 
-
-  
     private func configureLabel(label: UILabel, title: String, details: String) {
         let attributedText = NSMutableAttributedString(attributedString: NSAttributedString(string: "\(title): ", attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 16),NSAttributedString.Key.foregroundColor: UIColor.systemPink]))
         attributedText.append(NSAttributedString(string: "\(details)", attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 16), NSAttributedString.Key.foregroundColor: UIColor.gray]))
         label.attributedText = attributedText
     }
-    
-
 }
 
