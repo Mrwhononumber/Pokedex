@@ -1,7 +1,7 @@
 # Pokedex - MVVM Architecture Demo 
 Sample iOS application in Swift demonstrating the usage of MVVM pattern
 
-<img src="https://github.com/Mrwhononumber/Images/blob/a37a870726b4159f6e5e9d474008c5c220300006/Images/PokedexDarkModeSE.gif" width="200">
+<img src="https://github.com/Mrwhononumber/Images/blob/5ef78d3db8ae1dda677b664fa02c9610a7ed4d00/Images/5.gif" width="200">
 
 
 
